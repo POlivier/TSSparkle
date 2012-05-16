@@ -1,0 +1,55 @@
+ul#menu, ul#menu ul {
+  list-style-type:none;
+  margin: 0;
+  padding: 0;
+  width: 8em;
+	font-family: arial, sans-serif;
+	font-size: 18px;
+	font-color: #d3d0d9;
+}
+
+ul#menu a {
+  display: block;
+  text-decoration: none;	
+}
+
+ul#menu li {
+  margin-top: 1px;
+	font-family: arial, sans-serif;
+	font-size: 18px;
+}
+
+/* stijl menu hoofditems */
+ul#menu li a {
+  background: #3e3552;
+  color: #d3d0d9;	
+  padding: 0.1em;
+	border-style:solid;
+	border-width: 1px;
+}
+
+/* stijl menu hoofditems bij hover */
+ul#menu li a:hover {
+  background: #c34457;
+	color: #d3d0d9;
+}
+
+/* stijl menu subitems */
+ul#menu li ul li a {
+  background: #c34457;
+  color: #d3d0d9;
+	font-family: arial, sans-serif;
+	font-size: 18px;
+}
+
+/* stijl menu subitems bij hover */
+ul#menu li ul li a:hover {
+  background: #3e3552 ;
+}
+
+/* Radio Buttin */
+#button {background: #3e3552;
+	 color: #c34457;
+	 border: 0;
+}
+

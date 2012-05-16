@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+  
+  <link rel="stylesheet" type="text/css" href="vouwmenu.css">
+  <link rel="stylesheet" type="text/css" href="content.css">
+
+  
+  <script type="text/javascript">
+// dit kun je wijzigen
+	var Beeldbreedte=400;
+	var Beeldhoogte=500;
+	var Rand=true;
+	var Randkleur="silver";
+	var Snelheid=15;
+	var Pauze=1500; // 1 seconde = 1000
+	var Verticaal=0;	
+	var Achteruit=false;
+	var Automatisch=true;
+// hier plaats je de afbeeldingen
+	Afbeeldingen=new Array(
+	<!--"(pad naar) afbeeldingnaam","optionele link","optioneel target bij framesgebruik" -->
+		"images/overig/1.JPG","#","",
+		"images/overig/2.JPG","#","",
+		"images/overig/3.JPG","#","" // geen komma na laatste regel!
+		);
+		
+// Hieronder niets wijzigen
+	var BLI,BMI,BRI,BTI;
+	var HOEK=0,ActBeeld,VolgBeeld,MAXB,RICHTING=true,RICHTINGgewijzigd=false;
+	var AFB=Afbeeldingen,AFBV=AFB.length,RichtingVlag=false;
+	var B_MSz,HALT=Automatisch?false:true;PreBeeld=new Array(AFBV);
+
+	function fotoboek(){
+		if(document.getElementById){
+			for(var i=0;i<AFBV;i+=3){PreBeeld[i]=new Image();PreBeeld[i].src=AFB[i]}
+			BoekDiv=document.getElementById("Boek");
+			BLI=document.createElement("img");BoekDiv.appendChild(BLI);	
+			BRI=document.createElement("img");BoekDiv.appendChild(BRI);
+			BMI=document.createElement("img");BoekDiv.appendChild(BMI);
+			BLI.style.position=BMI.style.position=BRI.style.position="absolute";
+			BLI.style.zIndex=BRI.style.zIndex=0;BMI.style.zIndex=1;
+			BLI.style.top=BLI.style.left=BMI.style.top=BRI.style.top=0+"px";
+			BMI.style.left=(Achteruit?0:Beeldbreedte+1)+"px";
+			BRI.style.left=Beeldbreedte+1+"px";
+			BLI.style.height=BMI.style.height=BRI.style.height=Beeldhoogte+"px";
+			BLI.style.width=BMI.style.width=BRI.style.width=Beeldbreedte+"px";
+			if(Rand){
+				BLI.style.borderStyle=BMI.style.borderStyle=BRI.style.borderStyle="solid";
+				BLI.style.borderWidth=BMI.style.borderWidth=BRI.style.borderWidth=1+"px";
+				BLI.style.borderColor=BMI.style.borderColor=BRI.style.borderColor=Randkleur}
+			BLI.src=Achteruit?AFB[AFBV-12]:AFB[0];
+			BLI.lnk=Achteruit?AFB[AFBV-11]:AFB[1];
+			BLI.trgt=Achteruit?AFB[AFBV-10]:AFB[2];
+			BMI.src=Achteruit?AFB[AFBV-6]:AFB[3];
+			BMI.lnk=Achteruit?AFB[AFBV-5]:AFB[4];
+			BMI.trgt=Achteruit?AFB[AFBV-4]:AFB[5];
+			BRI.src=Achteruit?AFB[AFBV-3]:AFB[9];
+			BRI.lnk=Achteruit?AFB[AFBV-2]:AFB[10];
+			BRI.trgt=Achteruit?AFB[AFBV-1]:AFB[11];
+			ActBeeld=Achteruit?AFBV-9:6;
+			VolgBeeld=Achteruit?AFBV-18:15;
+			BLI.onclick=BMI.onclick=BRI.onclick=BeeldLink;
+			BLI.onmouseover=BMI.onmouseover=BRI.onmouseover=STOP;
+			BLI.onmouseout=BMI.onmouseout=BRI.onmouseout=START;
+			AFBEELDINGEN()}}
+
+	function AFBEELDINGEN(){
+		if(!HALT){
+			if(RichtingVlag)WijzigRichting();
+			B_MSz=Math.abs(Math.round(Math.cos(HOEK)*Beeldbreedte));
+			MidOffset=!Achteruit?RICHTING?Beeldbreedte+1:Beeldbreedte-B_MSz:
+				RICHTING?Beeldbreedte-B_MSz:Beeldbreedte+1;
+			BMI.style.left=MidOffset+"px";
+			BMI.style.width=B_MSz+"px";
+			HOEK+=Snelheid/720*Math.PI;
+			if(HOEK>=Math.PI/2&&RICHTING){
+				RICHTING=false;
+				BMI.src=AFB[ActBeeld];BMI.lnk=AFB[ActBeeld+1];BMI.trgt=AFB[ActBeeld+2];
+				ActBeeld+=(Achteruit?-6:6);
+				if(ActBeeld>=AFBV)ActBeeld-=AFBV;
+				if(ActBeeld<0)ActBeeld+=AFBV}
+			if(HOEK>=Math.PI){
+				RICHTING=true;
+				if(!Achteruit){
+					BTI=BLI;BLI=BMI;BMI=BTI;
+					BMI.style.left=Beeldbreedte+1+"px";			
+					BMI.src=BRI.src;	BMI.lnk=BRI.lnk;BMI.trgt=BRI.trgt}
+				else{	BTI=BRI;BRI=BMI;BMI=BTI;
+					BMI.style.left=0+"px";			
+					BMI.src=BLI.src;BMI.lnk=BLI.lnk;BMI.trgt=BLI.trgt}
+				setTimeout("PAUZEREN()",Pauze)}
+			else setTimeout("AFBEELDINGEN()",50)}
+		else setTimeout("AFBEELDINGEN()",50)}
+
+	function PAUZEREN(){
+			if(!Achteruit){
+				BRI.src=AFB[VolgBeeld];	BRI.lnk=AFB[VolgBeeld+1];BRI.trgt=AFB[VolgBeeld+2];
+				BLI.style.zIndex=1}
+			else {BLI.src=AFB[VolgBeeld];BLI.lnk=AFB[VolgBeeld+1];BLI.trgt=AFB[VolgBeeld+2];
+				BRI.style.zIndex=1}
+			BMI.style.zIndex=2;HOEK=0;
+			VolgBeeld+=(Achteruit?-6:6);
+			if(VolgBeeld>=AFBV&&!Achteruit)VolgBeeld-=AFBV;
+			if(VolgBeeld<0&&Achteruit)VolgBeeld+=AFBV;
+		if(!Automatisch&&!RICHTINGgewijzigd)HALT=true;RICHTINGgewijzigd=false;
+		setTimeout("AFBEELDINGEN()",50)}
+
+	function WijzigRichting(){
+		HALT=true;
+		Achteruit=Achteruit?false:true;RICHTING=RICHTING?false:true;
+		HOEK=Math.PI-HOEK;
+		RichtingVlag=HALT=false;
+		ActBeeld+=(Achteruit?-9:9);
+		if(ActBeeld>=AFBV)ActBeeld-=AFBV;
+		if(ActBeeld<0)ActBeeld+=AFBV;
+		VolgBeeld+=(Achteruit?-21:21);
+		if(VolgBeeld>=AFBV)VolgBeeld-=AFBV;
+		if(VolgBeeld<0)VolgBeeld+=AFBV;
+		RICHTINGgewijzigd=true}
+	
+	function Wijzig_Richting(){HALT=false;RichtingVlag=true}
+	function Ga_Achteruit(){HALT=false;if(!Achteruit)Wijzig_Richting()}
+	function Ga_Vooruit(){HALT=false;if(Achteruit)Wijzig_Richting()}
+	function Wissel_Auto_of_Manueel(){HALT=false;Automatisch=Automatisch?false:true}
+	function Maak_Auto(){HALT=false;Automatisch=true}
+	function Maak_Manueel(){Automatisch=false}
+	function STOP(){if(Automatisch)HALT=true;this.style.cursor=this.lnk?"pointer":"default"}
+	function START(){if(Automatisch)HALT=false}
+	function BeeldLink(){var FotoboekFrame;
+		if(this.lnk){
+			if(!this.trgt)location.href=this.lnk;
+			else if(this.trgt=="top")top.location.href=this.lnk;
+			else if(this.trgt=="new")window.open(this.lnk);
+			else if(FotoboekFrame=parent.frames[this.trgt])FotoboekFrame.location.href=this.lnk;
+			else location.href=this.lnk}}
+  </script>
+  
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+  <title>honden.html</title>
+
+  
+  
+  <style type="text/css"></style>
+</head><body onload="fotoboek()">
+<div id="Boek" style="position: relative;">
+<img style="width: 400px; height: 500px;" src="images/transparent.gif"></div>
+
+<br>
+
+<br>
+
+</body></html>
